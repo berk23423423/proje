@@ -1,0 +1,284 @@
+================================================================================
+  YEMEKHANE MENÜ SİSTEMİ - KURULUM VE KULLANIM REHBERİ
+================================================================================
+
+Bu rehber, projeyi başka bir bilgisayarda çalıştırmak için gereken tüm adımları
+içermektedir. Lütfen adımları sırasıyla takip edin.
+
+================================================================================
+  BÖLÜM 1: GEREKSİNİMLER
+================================================================================
+
+Bu uygulamayı çalıştırmak için aşağıdaki yazılımların kurulu olması gerekir:
+
+1. Microsoft SQL Server Express (Ücretsiz)
+   - İndirme: https://www.microsoft.com/tr-tr/sql-server/sql-server-downloads
+   - SQL Server Express seçeneğini seçin
+
+2. SQL Server Management Studio (SSMS) (Ücretsiz)
+   - İndirme: https://aka.ms/ssmsfullsetup
+
+3. Visual Studio 2019 veya üzeri (Community Edition ücretsiz)
+   - İndirme: https://visualstudio.microsoft.com/tr/downloads/
+   - Kurulum sırasında ".NET desktop development" iş yükünü seçin
+
+4. .NET Framework 4.7.2 veya üzeri
+   - Genellikle Windows 10/11 ile birlikte gelir
+   - Gerekirse: https://dotnet.microsoft.com/download/dotnet-framework
+
+================================================================================
+  BÖLÜM 2: SQL SERVER KURULUMU
+================================================================================
+
+ADIM 1: SQL Server Express Kurulumu
+------------------------------------
+1. SQL Server Express indirme sayfasına gidin
+2. "İndir" butonuna tıklayın
+3. Kurulum dosyasını çalıştırın
+4. Kurulum sihirbazında "Basic" seçeneğini seçin
+5. Lisans koşullarını kabul edin
+6. "Install" butonuna tıklayın
+7. Kurulum tamamlanana kadar bekleyin (5-10 dakika)
+
+ÖNEMLİ: Kurulum sırasında SQL Server instance adını not edin!
+Genellikle şu formattadır:
+- (local)\SQLEXPRESS
+- BILGISAYAR_ADI\SQLEXPRESS
+
+ADIM 2: SSMS Kurulumu
+----------------------
+1. SSMS indirme linkine gidin: https://aka.ms/ssmsfullsetup
+2. İndirme başladıktan sonra kurulum dosyasını çalıştırın
+3. Kurulum sihirbazını takip edin
+4. "Install" butonuna tıklayın
+
+ADIM 3: SSMS'ye Bağlanma
+-------------------------
+1. Başlat menüsünden "SQL Server Management Studio" arayın
+2. Uygulamayı açın
+3. İlk açılışta şu bilgileri girin:
+   - Server type: Database Engine
+   - Server name: (local)\SQLEXPRESS (veya kurulum sırasında not ettiğiniz ad)
+   - Authentication: Windows Authentication
+4. "Connect" butonuna tıklayın
+
+Eğer bağlanamazsanız:
+- Windows tuşu + R
+- services.msc yazın
+- "SQL Server (SQLEXPRESS)" servisini bulun
+- Sağ tıklayıp "Start" seçin
+
+================================================================================
+  BÖLÜM 3: VERİTABANI OLUŞTURMA
+================================================================================
+
+ADIM 1: Veritabanı Script'ini Çalıştırma
+-----------------------------------------
+1. SSMS'de sol tarafta "Databases" klasörüne sağ tıklayın
+2. "New Query" seçeneğini seçin
+3. Proje klasörünüzdeki "database_script.sql" dosyasını açın
+4. Tüm içeriği kopyalayın (Ctrl+A, Ctrl+C)
+5. SSMS'deki Query penceresine yapıştırın (Ctrl+V)
+6. "Execute" butonuna tıklayın (veya F5 tuşuna basın)
+7. Alt kısımda "Command(s) completed successfully" mesajını görmelisiniz
+
+ADIM 2: Veritabanını Kontrol Etme
+----------------------------------
+1. Sol tarafta "Databases" klasörünü genişletin
+2. "yemekhanemenusıstemı" veritabanını görmelisiniz
+3. Veritabanına tıklayıp "Tables" klasörünü açın
+4. Şu tabloları görmelisiniz:
+   - categories
+   - orders
+   - products
+   - suppliers
+   - users
+   - warehouse_entries
+   - warehouse_exits
+   - warehouses
+
+ADIM 3: Test Verilerini Ekleme (OPSİYONEL)
+------------------------------------------
+1. SSMS'de "yemekhanemenusıstemı" veritabanını seçin
+2. "New Query" açın
+3. Proje klasörünüzdeki "test_data.sql" dosyasını açın
+4. Tüm içeriği kopyalayın ve Query penceresine yapıştırın
+5. "Execute" butonuna tıklayın
+6. Test verileri başarıyla eklenecektir
+
+================================================================================
+  BÖLÜM 4: PROJE DOSYALARINI HAZIRLAMA
+================================================================================
+
+ADIM 1: Proje Dosyalarını Kopyalama
+------------------------------------
+1. Tüm proje klasörünü yeni bilgisayara kopyalayın
+2. Proje klasörünün yolunda Türkçe karakter olmamasına dikkat edin
+3. Örnek: C:\Projects\yemekhanemenusistemi
+
+ADIM 2: Visual Studio'da Projeyi Açma
+-------------------------------
+1. Visual Studio'yu açın
+2. File > Open > Project/Solution
+3. Proje klasöründeki "yemekhanemenusıstemı.sln" dosyasını seçin
+4. "Open" butonuna tıklayın
+
+================================================================================
+  BÖLÜM 5: CONNECTION STRING AYARLARI
+================================================================================
+
+ADIM 1: SQL Server Instance Adını Bulma
+----------------------------------------
+1. SSMS'de bağlandığınız server adına bakın (üst kısımda görünür)
+2. Genellikle şu formattadır: BILGISAYAR_ADI\SQLEXPRESS
+3. Bu adı not edin
+
+ADIM 2: App.config Dosyasını Güncelleme
+---------------------------------------
+1. Visual Studio'da Solution Explorer'da "App.config" dosyasını bulun
+2. Dosyaya çift tıklayarak açın
+3. Şu satırı bulun:
+   <add name="DefaultConnection" 
+        connectionString="Data Source=FURKAN\SQLEXPRESS;..." />
+
+4. "Data Source=" kısmındaki değeri kendi SQL Server instance adınızla değiştirin
+
+ÖRNEKLER:
+---------
+Eğer SQL Server instance adınız "(local)\SQLEXPRESS" ise:
+connectionString="Data Source=(local)\SQLEXPRESS;Initial Catalog=yemekhanemenusıstemı;Integrated Security=True;Encrypt=False;TrustServerCertificate=True"
+
+Eğer SQL Server instance adınız "BILGISAYAR_ADI\SQLEXPRESS" ise:
+connectionString="Data Source=BILGISAYAR_ADI\SQLEXPRESS;Initial Catalog=yemekhanemenusıstemı;Integrated Security=True;Encrypt=False;TrustServerCertificate=True"
+
+ÖNEMLİ: Veritabanı adı "yemekhanemenusıstemı" olmalı (Türkçe 'ı' karakteri ile)
+
+ADIM 3: Connection String'i Test Etme
+--------------------------------------
+1. App.config dosyasını kaydedin (Ctrl+S)
+2. Projeyi derleyin (Build > Build Solution veya Ctrl+Shift+B)
+3. Eğer derleme başarılı olursa, connection string doğru demektir
+
+================================================================================
+  BÖLÜM 6: UYGULAMAYI ÇALIŞTIRMA
+================================================================================
+
+ADIM 1: Projeyi Derleme
+------------------------
+1. Visual Studio'da Build > Build Solution (veya Ctrl+Shift+B)
+2. Alt kısımda "Build succeeded" mesajını görmelisiniz
+3. Eğer hata varsa, hata mesajlarını kontrol edin
+
+ADIM 2: Uygulamayı Çalıştırma
+------------------------------
+1. Visual Studio'da Debug > Start Debugging (veya F5 tuşu)
+2. Uygulama açılacaktır
+
+ADIM 3: İlk Giriş
+-----------------
+Eğer test verilerini eklediyseniz:
+- Kullanıcı adı: admin
+- Şifre: admin123
+
+Eğer test verilerini eklemediyseniz:
+1. "Sign Up" butonuna tıklayın
+2. Yeni bir kullanıcı oluşturun
+3. Oluşturduğunuz kullanıcı ile giriş yapın
+
+================================================================================
+  BÖLÜM 7: SORUN GİDERME
+================================================================================
+
+SORUN 1: "Connection string not found" Hatası
+----------------------------------------------
+ÇÖZÜM:
+1. App.config dosyasının proje klasöründe olduğundan emin olun
+2. App.config dosyasında connectionStrings bölümünün doğru olduğunu kontrol edin
+3. Projeyi temizleyip yeniden derleyin:
+   - Build > Clean Solution
+   - Build > Rebuild Solution
+
+SORUN 2: "Cannot open database" Hatası
+----------------------------------------
+ÇÖZÜM:
+1. Veritabanının oluşturulduğundan emin olun (Bölüm 3, Adım 2)
+2. Connection string'deki veritabanı adının doğru olduğunu kontrol edin
+3. SQL Server servisinin çalıştığından emin olun (Bölüm 2, Adım 3)
+
+SORUN 3: "Login failed" Hatası
+-------------------------------
+ÇÖZÜM:
+1. Windows Authentication kullandığınızdan emin olun
+2. SQL Server'ın Windows Authentication modunda olduğundan emin olun
+3. Windows kullanıcı adınızla SQL Server'a bağlanabildiğinizi kontrol edin
+
+SORUN 4: SQL Server'a Bağlanamıyorum
+-------------------------------------
+ÇÖZÜM:
+1. Windows tuşu + R
+2. services.msc yazın
+3. "SQL Server (SQLEXPRESS)" servisini bulun
+4. Sağ tıklayıp "Start" seçin
+5. Eğer servis zaten çalışıyorsa, "Restart" seçin
+
+SORUN 5: Derleme Hataları
+--------------------------
+ÇÖZÜM:
+1. Visual Studio'yu yönetici olarak çalıştırın
+2. NuGet paketlerini restore edin:
+   - Tools > NuGet Package Manager > Package Manager Console
+   - "Update-Package -reinstall" komutunu çalıştırın
+3. Projeyi temizleyip yeniden derleyin:
+   - Build > Clean Solution
+   - Build > Rebuild Solution
+
+SORUN 6: Ürünler/Kategoriler Görünmüyor
+----------------------------------------
+ÇÖZÜM:
+1. Veritabanında ürünlerin status değerinin "Available" olduğunu kontrol edin:
+   SELECT * FROM products WHERE status = 'Available';
+2. Kategorilerin status değerinin "Active" olduğunu kontrol edin:
+   SELECT * FROM categories WHERE status = 'Active';
+3. Test verilerini ekleyin (Bölüm 3, Adım 3)
+
+================================================================================
+  BÖLÜM 8: ÖNEMLİ NOTLAR
+================================================================================
+
+1. SQL Server Express ücretsizdir ve ticari kullanım için uygundur
+2. Integrated Security=True kullanıldığı için Windows kullanıcı adınızla 
+   otomatik giriş yapılır
+3. Veritabanı dosyaları genellikle şu konumda bulunur:
+   C:\Program Files\Microsoft SQL Server\MSSQL15.SQLEXPRESS\MSSQL\DATA\
+4. Düzenli yedekleme yapmanız önerilir
+5. Proje klasörü yolunda Türkçe karakter olmaması önerilir
+6. Connection string'deki veritabanı adı "yemekhanemenusıstemı" olmalı 
+   (Türkçe 'ı' karakteri ile)
+
+================================================================================
+  BÖLÜM 9: HIZLI BAŞLANGIÇ ÖZETİ
+================================================================================
+
+Yeni bir bilgisayarda hızlıca başlamak için:
+
+1. SQL Server Express ve SSMS kurun
+2. SSMS'de database_script.sql dosyasını çalıştırın
+3. SSMS'de test_data.sql dosyasını çalıştırın (opsiyonel)
+4. Visual Studio'da projeyi açın
+5. App.config dosyasındaki connection string'i güncelleyin
+6. Projeyi derleyin (Ctrl+Shift+B)
+7. Uygulamayı çalıştırın (F5)
+
+================================================================================
+  DESTEK VE İLETİŞİM
+================================================================================
+
+Sorun yaşarsanız:
+1. Yukarıdaki "Sorun Giderme" bölümünü kontrol edin
+2. Hata mesajlarını not edin
+3. SQL Server ve Visual Studio log dosyalarını kontrol edin
+
+================================================================================
+                          İYİ ÇALIŞMALAR!
+================================================================================
+
